@@ -1,0 +1,13 @@
+{% load bootstrap3 %}
+<!doctype html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <title>{% block title %}Homepage{% endblock %} - TaskTracker</title>
+        {% bootstrap_css %}
+        {% bootstrap_javascript %}
+    </head>
+    </body>
+        {% block content %}{% endblock %}
+    </body>
+</html>
