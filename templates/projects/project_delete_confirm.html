@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'logged_base.html' %}
 {% load bootstrap3 %}
 
 {% block title %}Project delete{% endblock %}
 
-{% block content %}
+{% block main_content %}
 <form method="post">
     {% csrf_token %}
     <p>Do you really want to delete project '{{ object.name }}'?</p>

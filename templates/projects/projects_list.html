@@ -1,9 +1,9 @@
-{% extends 'base.html' %}
+{% extends 'logged_base.html' %}
 {% load projects_tags %}
 
 {% block title %}Projects{% endblock %}
 
-{% block content %}
+{% block main_content %}
 <a href="{% url 'projects-create' %}">Create project</a>
 <table class="table table-striped">
     {% for project in projects %}

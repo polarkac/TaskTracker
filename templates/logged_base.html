@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% load projects_tags %}
+
+{% block content %}
+<div class="row">
+    <div id="sidebar" class="col-sm-3 col-md-2">
+        <a href="{% url 'projects-create' %}" class="btn btn-primary">
+            Create project
+        </a>
+        <table class="table nav nav-sidebar">
+            {% projects_list user as projects %}
+            {% for project in projects %}
+            <tr>
+                <td>
+                    {{ project.name }}
+                </td><td>
+                    <a href="{% url 'projects-delete' project.id %}">X</a>
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="2">No projects.</td></tr>
+            {% endfor %}
+        </table>
+    </div>
+    <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2" id="logged-content">
+        {% block main_content %}Main content{% endblock %}
+    </div>
+</div>
+{% endblock %}
