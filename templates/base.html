@@ -1,3 +1,4 @@
+{% load staticfiles %}
 {% load bootstrap3 %}
 <!doctype html>
 <html>
@@ -6,8 +7,26 @@
         <title>{% block title %}Homepage{% endblock %} - TaskTracker</title>
         {% bootstrap_css %}
         {% bootstrap_javascript %}
+        <link rel="stylesheet" href="{% static 'styles.css' %}">
     </head>
-    </body>
+    <body>
+        <nav class="navbar navbar-inverse navbar-fixed-top">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <a class="navbar-brand" href="#">TaskTracker</a>
+                </div>
+                {% if user.is_authenticated %}
+                <div class="navbar-collapse collapse">
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#">Account settings</a></li>
+                        <li><a href="{% url 'homepage-logout' %}">Logout</a></li>
+                    </ul>
+                </div>
+                {% endif %}
+            </div>
+        </nav>
+        <div class="container" id="main-content">
         {% block content %}{% endblock %}
+        </div>
     </body>
 </html>

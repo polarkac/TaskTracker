@@ -17,8 +17,10 @@ from django.conf.urls import url, include
 from django.contrib import admin
 
 import homepage.urls
+import projects.urls
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
+    url(r'^projects/', include(projects.urls)),
     url(r'^', include(homepage.urls)),
 ]
