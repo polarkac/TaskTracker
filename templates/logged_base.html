@@ -9,10 +9,17 @@
         </a>
         <table class="table nav nav-sidebar">
             {% projects_list user as projects %}
+            <tr>
+                <td colspan="2">
+                    <a href="{% url 'projects-detail' 'none' %}">None</a>
+                </td>
+            </tr>
             {% for project in projects %}
             <tr>
                 <td>
-                    {{ project.name }}
+                    <a href="{% url 'projects-detail' project.id %}">
+                        {{ project.name }}
+                    </a>
                 </td><td>
                     <a href="{% url 'projects-delete' project.id %}">X</a>
                 </td>
