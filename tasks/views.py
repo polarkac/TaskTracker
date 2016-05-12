@@ -2,7 +2,7 @@ from django.views.generic import TemplateView, CreateView, DeleteView
 from django.core.urlresolvers import reverse
 from django.http import Http404
 
-from tasks.models import Project
+from tasks.models import Project, Task
 from tasks.forms import ProjectForm
 
 class ProjectDetailView(TemplateView):
@@ -15,7 +15,7 @@ class ProjectDetailView(TemplateView):
             project = self.get_project()
         except Project.DoesNotExist:
             raise Http404
-        tasks = self.get_tasks()
+        tasks = self.get_tasks(project)
 
         context.update({'project': project, 'tasks': tasks})
 
@@ -31,8 +31,11 @@ class ProjectDetailView(TemplateView):
 
         return project
 
-    def get_tasks(self):
-        return []
+    def get_tasks(self, project):
+        tasks = Task.objects.filter(project=project)
+        print(tasks)
+
+        return tasks
 
 class ProjectCreateView(CreateView):
 
@@ -66,3 +69,36 @@ class ProjectDeleteView(DeleteView):
 
     def get_success_url(self):
         return reverse('tasks-project-detail', args=['general'])
+
+class TaskCreateView(CreateView):
+
+    model = Task
+    template_name = 'tasks/task_form.html'
+    fields = ['name', 'priority', 'category']
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({'project': self.get_project()})
+
+        return context
+
+    def form_valid(self, form):
+        self.object = form.save(commit=False)
+        self.object.project = self.get_project()
+        self.object.save()
+
+        return super().form_valid(form)
+
+    def get_project(self):
+        user = self.request.user
+        try:
+            project = Project.objects.get(
+                pk=self.kwargs.get('project_pk'), user=user
+            )
+        except Project.DoesNotExist:
+            raise Http404
+
+        return project
+
+    def get_success_url(self):
+        return '/'

@@ -4,7 +4,7 @@ from tasks.views import ProjectDetailView, ProjectCreateView, ProjectDeleteView
 
 urlpatterns = [
     url(
-        r'^detail/(?P<pk>([0-9]+|general))/$', ProjectDetailView.as_view(),
+        r'^detail/(?P<pk>[0-9]+)/$', ProjectDetailView.as_view(),
         name='tasks-project-detail'
     ),
     url(r'^create/$', ProjectCreateView.as_view(), name='tasks-project-create'),
