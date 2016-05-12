@@ -13,6 +13,22 @@ class Project(models.Model):
     class Meta:
         unique_together = (('name', 'user'),)
 
+class Priority(models.Model):
+
+    name = models.CharField(max_length=100, unique=True)
+
+class Category(models.Model):
+
+    name = models.CharField(max_length=150)
+
+class Task(models.Model):
+
+    name = models.CharField(max_length=200)
+    project = models.ForeignKey(Project)
+    priority = models.ForeignKey(Priority)
+    category = models.ForeignKey(Category)
+    created_date = models.DateTimeField(auto_now_add=True)
+
 @receiver(post_save, sender=User)
 def create_general_project(sender, instance, created, **kwargs):
     if created:
