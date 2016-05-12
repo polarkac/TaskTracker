@@ -4,25 +4,23 @@
 {% block content %}
 <div class="row">
     <div id="sidebar" class="col-sm-3 col-md-2">
-        <a href="{% url 'projects-create' %}" class="btn btn-primary">
+        <a href="{% url 'tasks-project-create' %}" class="btn btn-primary">
             Create project
         </a>
         <table class="table nav nav-sidebar">
             {% projects_list user as projects %}
-            <tr>
-                <td colspan="2">
-                    <a href="{% url 'projects-detail' 'none' %}">None</a>
-                </td>
-            </tr>
             {% for project in projects %}
             <tr>
-                <td>
-                    <a href="{% url 'projects-detail' project.id %}">
+                <td{% if project.default %} colspan="2"{% endif %}>
+                    <a href="{% url 'tasks-project-detail' project.id %}">
                         {{ project.name }}
                     </a>
-                </td><td>
-                    <a href="{% url 'projects-delete' project.id %}">X</a>
                 </td>
+                {% if not project.default %}
+                <td>
+                    <a href="{% url 'tasks-project-delete' project.id %}">X</a>
+                </td>
+                {% endif %}
             </tr>
             {% empty %}
             <tr><td colspan="2">No projects.</td></tr>

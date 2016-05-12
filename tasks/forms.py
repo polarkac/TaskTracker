@@ -1,7 +1,7 @@
 from django import forms
 from django.utils.translation import ugettext as _
 
-from projects.models import Project
+from tasks.models import Project
 
 class ProjectForm(forms.ModelForm):
 
