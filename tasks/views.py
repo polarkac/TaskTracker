@@ -33,7 +33,6 @@ class ProjectDetailView(TemplateView):
 
     def get_tasks(self, project):
         tasks = Task.objects.filter(project=project)
-        print(tasks)
 
         return tasks
 
@@ -68,13 +67,26 @@ class ProjectDeleteView(DeleteView):
         return obj
 
     def get_success_url(self):
-        return reverse('tasks-project-detail', args=['general'])
+        return reverse('tasks-home')
+
+class TasksHomeView(TemplateView):
+
+    template_name = 'tasks/tasks_home.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        user = self.request.user
+        general_project = Project.objects.get(name='General', user=user)
+        tasks = Task.objects.filter(project=general_project)
+        context.update({'project': general_project, 'tasks': tasks})
+
+        return context
 
 class TaskCreateView(CreateView):
 
     model = Task
     template_name = 'tasks/task_form.html'
-    fields = ['name', 'priority', 'category']
+    fields = ['name', 'description', 'priority', 'category']
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -92,13 +104,33 @@ class TaskCreateView(CreateView):
     def get_project(self):
         user = self.request.user
         try:
-            project = Project.objects.get(
+            self.project = Project.objects.get(
                 pk=self.kwargs.get('project_pk'), user=user
             )
         except Project.DoesNotExist:
             raise Http404
 
-        return project
+        return self.project
 
     def get_success_url(self):
-        return '/'
+        return reverse('tasks-project-detail', args=[self.project.id])
+
+class TaskDetailView(TemplateView):
+
+    template_name = 'tasks/task_detail.html'
+
+    def get_context_data(self, *args, **kwargs):
+        context = super().get_context_data(*args, **kwargs)
+        context.update({'task': self.get_task()})
+
+        return context
+
+    def get_task(self):
+        pk = self.kwargs.get('task_pk')
+        user = self.request.user
+        try:
+            task = Task.objects.get(id=pk, project__user=user)
+        except Task.DoesNotExist:
+            raise Http404
+
+        return task

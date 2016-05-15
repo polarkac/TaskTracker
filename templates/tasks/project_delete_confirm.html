@@ -9,7 +9,7 @@
     <p>Do you really want to delete project '{{ object.name }}'?</p>
     {% buttons %}
     <button type="submit" class="btn btn-primary">Delete</button>
-    <a href="{% url 'tasks-project-detail' 'general' %}" class="btn btn-default">Cancel</a>
+    <a href="{% url 'tasks-home' %}" class="btn btn-default">Cancel</a>
     {% endbuttons %}
 </form>
 {% endblock %}

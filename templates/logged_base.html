@@ -13,12 +13,12 @@
             <tr>
                 <td{% if project.default %} colspan="2"{% endif %}>
                     <a href="{% url 'tasks-project-detail' project.id %}">
-                        {{ project.name }}
+                        {{ project.name|capfirst }}
                     </a>
                 </td>
                 {% if not project.default %}
                 <td>
-                    <a href="{% url 'tasks-project-delete' project.id %}">X</a>
+                    <a href="{% url 'tasks-project-delete' project.id %}">&#128473;</a>
                 </td>
                 {% endif %}
             </tr>

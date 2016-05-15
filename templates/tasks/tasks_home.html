@@ -1,12 +1,8 @@
 {% extends 'logged_base.html' %}
-{% load projects_tags %}
 
-{% block title %}Project {{ project.name|default:'None' }}{% endblock %}
+{% block title %}Home{% endblock %}
 
 {% block main_content %}
-<h2>{{ project.name|capfirst }}</h2>
-<p>{{ project.description|default:'...' }}</p>
-
 <a href="{% url 'tasks-task-create' project.id %}" class="btn btn-primary">
     Create task
 </a>

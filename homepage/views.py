@@ -15,7 +15,7 @@ class LoginView(FormView):
         return super().form_valid(form)
 
     def get_success_url(self):
-        return reverse('tasks-project-detail', args=['general'])
+        return reverse('tasks-home')
 
 class LogoutView(RedirectView):
 

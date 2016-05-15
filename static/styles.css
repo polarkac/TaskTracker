@@ -15,3 +15,18 @@
     background-color: #f5f5f5;
     border-right: 1px solid #eee;
 }
+
+#low-priority {
+    color: #21a800;
+    font-size: 1.5em;
+}
+
+#normal-priority {
+    color: black;
+    font-size: 1.5em;
+}
+
+#high-priority {
+    color: #ce1800;
+    font-size: 1.5em;
+}

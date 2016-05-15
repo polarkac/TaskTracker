@@ -1,6 +1,8 @@
 from django.conf.urls import url
 
-from tasks.views import ProjectDetailView, ProjectCreateView, ProjectDeleteView
+from tasks.views import (
+    ProjectDetailView, ProjectCreateView, ProjectDeleteView,
+)
 
 urlpatterns = [
     url(

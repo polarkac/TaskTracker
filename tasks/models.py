@@ -24,6 +24,7 @@ class Category(models.Model):
 class Task(models.Model):
 
     name = models.CharField(max_length=200)
+    description = models.TextField()
     project = models.ForeignKey(Project)
     priority = models.ForeignKey(Priority)
     category = models.ForeignKey(Category)

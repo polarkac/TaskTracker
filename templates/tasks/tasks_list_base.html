@@ -1,0 +1,17 @@
+<table class="table table-striped">
+    <tr><td>Name</td><td>Priority</td></tr>
+    {% for task in tasks %}
+    <tr>
+        <td><a href="{% url 'tasks-task-detail' task.id %}">{{ task.name }}</a></td>
+        <td>
+            {% if task.priority.name == 'Low' %}
+            <span id="low-priority">⬇</span>
+            {% elif task.priority.name == 'Normal' %}
+            <span id="normal-priority">●</span>
+            {% elif task.priority.name == 'High' %}
+            <span id="high-priority">⬆</span>
+            {% endif %}
+        </td>
+    </tr>
+    {% endfor %}
+</table>
