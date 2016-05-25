@@ -1,7 +1,8 @@
 from django import forms
 from django.utils.translation import ugettext as _
+from django.db import transaction
 
-from tasks.models import Project
+from tasks.models import Project, Comment, TimeLog
 
 class ProjectForm(forms.ModelForm):
 
@@ -32,3 +33,19 @@ class ProjectForm(forms.ModelForm):
     class Meta:
         model = Project
         fields = ['name', 'description']
+
+class CommentTimeLogForm(forms.Form):
+
+    content = forms.CharField(widget=forms.Textarea())
+    spend_time = forms.IntegerField(initial=0, min_value=0)
+
+    def save(self, task):
+        with transaction.atomic():
+            comment = Comment.objects.create(
+                content=self.cleaned_data['content'],
+                task=task
+            )
+            TimeLog.objects.create(
+                spend_time=self.cleaned_data['spend_time'],
+                comment=comment
+            )

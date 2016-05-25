@@ -33,11 +33,12 @@ class Task(models.Model):
 class Comment(models.Model):
 
     content = models.TextField()
-    task = models.OneToOneField(Task)
+    task = models.ForeignKey(Task)
+    created_date = models.DateTimeField(auto_now_add=True)
 
 class TimeLog(models.Model):
 
-    spend_time = models.PositiveIntegerField()
+    spend_time = models.PositiveIntegerField(default=0)
     comment = models.OneToOneField(Comment)
 
 @receiver(post_save, sender=User)

@@ -1,19 +1,46 @@
 {% extends 'logged_base.html' %}
+{% load bootstrap3 %}
 
 {% block title %}Task {{ task.name }}{% endblock %}
 
 {% block main_content %}
-<h2>{{ task.name }}</h2>
-<p>{{ task.description }}</p>
-<div class="pull-right">
-    <table class="table">
-        <tr><td>Category</td><td>{{ task.category.name }}</td></tr>
-        <tr><td>Priority</td><td>{{ task.priority.name }}</td></tr>
-        <tr><td>Status</td><td>New</td></tr>
-    </table>
+<div class="row">
+    <div class="col-sm-8">
+        <h2>{{ task.name }}</h2>
+        <p>{{ task.description }}</p>
+    </div>
+    <div class="col-sm-4">
+        <table class="table">
+            <tr><td>Category</td><td>{{ task.category.name }}</td></tr>
+            <tr><td>Priority</td><td>{{ task.priority.name }}</td></tr>
+            <tr><td>Status</td><td>New</td></tr>
+            <tr><td>Total time</td><td>{{ total_spend_time }} minutes</td></tr>
+        </table>
+    </div>
 </div>
-<h3>Comments</h3>
-{% for comment in comments %}
-<div id="comment">{{ comment.text }}</div>
-{% endfor %}
+<div class="row">
+    <div class="col-sm-12">
+        <h3>Comments</h3>
+        <form method="post">
+            {% csrf_token %}
+            {% bootstrap_form comment_time_log_form %}
+            {% buttons %}
+            <button type="submit" class="btn btn-primary">Send</button>
+            {% endbuttons %}
+        </form>
+        {% for comment in comments %}
+        <div class="panel panel-default">
+            <div class="panel-heading">
+                {{ comment.created_date }}
+                {% if comment.timelog.spend_time > 0 %}
+                - {{ comment.timelog.spend_time }} minutes
+                {% endif %}
+            </div>
+            <div class="panel-body">
+                {{ comment.content }}
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
 {% endblock %}
