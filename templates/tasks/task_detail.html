@@ -14,7 +14,7 @@
             <tr><td>Category</td><td>{{ task.category.name }}</td></tr>
             <tr><td>Priority</td><td>{{ task.priority.name }}</td></tr>
             <tr><td>Status</td><td>New</td></tr>
-            <tr><td>Total time</td><td>{{ total_spend_time }} minutes</td></tr>
+            <tr><td>Total time</td><td>{{ total_spend_time|default:0 }} minutes</td></tr>
         </table>
     </div>
 </div>
