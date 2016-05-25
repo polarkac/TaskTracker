@@ -6,6 +6,7 @@ from django.db.models import Sum
 
 from tasks.models import Project, Task, Comment, TimeLog
 from tasks.forms import ProjectForm, CommentTimeLogForm
+from tasks.utils import get_total_project_spend_time
 
 class ProjectDetailView(TemplateView):
 
@@ -18,8 +19,12 @@ class ProjectDetailView(TemplateView):
         except Project.DoesNotExist:
             raise Http404
         tasks = self.get_tasks(project)
+        total_project_spend_time = get_total_project_spend_time(tasks)
 
-        context.update({'project': project, 'tasks': tasks})
+        context.update({
+            'project': project, 'tasks': tasks,
+            'total_project_spend_time': total_project_spend_time,
+        })
 
         return context
 
@@ -79,9 +84,15 @@ class TasksHomeView(TemplateView):
         context = super().get_context_data(*args, **kwargs)
         user = self.request.user
         general_project = Project.objects.get(name='General', user=user)
-        tasks = Task.objects.filter(project__user=user)\
+        tasks = (
+            Task.objects.filter(project__user=user)
             .order_by('-created_date').select_related()[:10]
-        context.update({'project': general_project, 'tasks': tasks})
+        )
+        total_project_spend_time = get_total_project_spend_time(tasks)
+        context.update({
+            'project': general_project, 'tasks': tasks,
+            'total_project_spend_time': total_project_spend_time,
+        })
 
         return context
 
