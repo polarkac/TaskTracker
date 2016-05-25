@@ -36,8 +36,8 @@ class ProjectForm(forms.ModelForm):
 
 class CommentTimeLogForm(forms.Form):
 
-    content = forms.CharField(widget=forms.Textarea())
-    spend_time = forms.IntegerField(initial=0, min_value=0)
+    content = forms.CharField(widget=forms.Textarea(), required=False)
+    spend_time = forms.IntegerField(initial=0, min_value=0, max_value=24 * 60)
 
     def save(self, task):
         with transaction.atomic():
