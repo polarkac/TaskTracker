@@ -30,6 +30,16 @@ class Task(models.Model):
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
 
+class Comment(models.Model):
+
+    content = models.TextField()
+    task = models.OneToOneField(Task)
+
+class TimeLog(models.Model):
+
+    spend_time = models.PositiveIntegerField()
+    comment = models.OneToOneField(Comment)
+
 @receiver(post_save, sender=User)
 def create_general_project(sender, instance, created, **kwargs):
     if created:
