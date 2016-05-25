@@ -10,6 +10,9 @@ class Project(models.Model):
     user = models.ForeignKey(User)
     default = models.BooleanField(default=False)
 
+    def __str__(self):
+        return self.name
+
     class Meta:
         unique_together = (('name', 'user'),)
 
@@ -17,9 +20,15 @@ class Priority(models.Model):
 
     name = models.CharField(max_length=100, unique=True)
 
+    def __str__(self):
+        return self.name
+
 class Category(models.Model):
 
     name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
 
 class Task(models.Model):
 
@@ -30,16 +39,25 @@ class Task(models.Model):
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return self.name
+
 class Comment(models.Model):
 
     content = models.TextField()
     task = models.ForeignKey(Task)
     created_date = models.DateTimeField(auto_now_add=True)
 
+    def __str__(self):
+        return '%s: %s'.format(self.task, self.created_date)
+
 class TimeLog(models.Model):
 
     spend_time = models.PositiveIntegerField(default=0)
     comment = models.OneToOneField(Comment)
+
+    def __str__(self):
+        return '%s: %s minutes'.format(self.comment.task, self.spend_time)
 
 @receiver(post_save, sender=User)
 def create_general_project(sender, instance, created, **kwargs):
