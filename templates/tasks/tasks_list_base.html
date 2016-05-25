@@ -1,9 +1,10 @@
 <p>Total time: {{ total_project_spend_time|default:0 }} minutes</p>
 <table class="table table-striped">
-    <tr><td>Name</td><td>Priority</td></tr>
+    <tr><td>Name</td><td>Total time</td><td>Priority</td></tr>
     {% for task in tasks %}
     <tr>
         <td><a href="{% url 'tasks-task-detail' task.id %}">{{ task.name }}</a></td>
+        <td>{{ task.total_spend_time }} minutes</td>
         <td>
             {% if task.priority.name == 'Low' %}
             <span id="low-priority">⬇</span>
