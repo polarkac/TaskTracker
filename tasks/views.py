@@ -170,7 +170,9 @@ class TaskDetailView(TemplateView):
         return task
 
     def get_comments(self):
-        comments = Comment.objects.all().filter(task=self.task)
+        comments = (
+            Comment.objects.all().filter(task=self.task).select_related('timelog')
+        )
 
         return comments
 
