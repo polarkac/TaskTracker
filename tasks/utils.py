@@ -7,6 +7,5 @@ def get_total_project_spend_time(tasks):
         TimeLog.objects.filter(comment__task__in=tasks)
         .aggregate(Sum('spend_time'))
     )['spend_time__sum']
-    print(total_time)
 
     return total_time
