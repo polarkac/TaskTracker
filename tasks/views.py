@@ -77,7 +77,8 @@ class TasksHomeView(TemplateView):
         context = super().get_context_data(*args, **kwargs)
         user = self.request.user
         general_project = Project.objects.get(name='General', user=user)
-        tasks = Task.objects.filter(project=general_project)
+        tasks = Task.objects.filter(project__user=user)\
+            .order_by('-created_date').select_related()[:10]
         context.update({'project': general_project, 'tasks': tasks})
 
         return context
