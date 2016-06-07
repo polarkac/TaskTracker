@@ -91,7 +91,11 @@ class TasksHomeView(LoginRequired, TemplateView):
         context = super().get_context_data(*args, **kwargs)
         user = self.request.user
         general_project = Project.objects.get(name='General', user=user)
-        tasks = Task.objects.filter(project__user=user).select_related()[:15]
+        not_closed_states = TaskState.objects.exclude(name='Closed')
+        tasks = (
+            Task.objects.filter(project__user=user, state=not_closed_states)
+            .select_related()[:15]
+        )
         total_project_spend_time = get_total_project_spend_time(tasks)
         annotate_total_time_per_task(tasks)
         context.update({
