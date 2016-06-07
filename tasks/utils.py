@@ -1,4 +1,5 @@
 from django.db.models import Sum
+from django.contrib.auth.mixins import LoginRequiredMixin
 
 from tasks.models import TimeLog
 
@@ -21,3 +22,7 @@ def annotate_total_time_per_task(tasks):
 
     for task in tasks:
         task.total_spend_time = total_times.get(task.id, 0)
+
+class LoginRequired(LoginRequiredMixin):
+
+    redirect_field_name = None

@@ -136,3 +136,7 @@ STATICFILES_DIRS = [
 DATE_FORMAT = 'd. m. Y'
 
 DATETIME_FORMAT = 'd. m. Y H:i'
+
+# Login URL
+
+LOGIN_URL = 'homepage-login'

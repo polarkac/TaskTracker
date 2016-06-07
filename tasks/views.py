@@ -6,9 +6,12 @@ from django.db.models import Sum
 
 from tasks.models import Project, Task, Comment, TimeLog
 from tasks.forms import ProjectForm, CommentTimeLogForm
-from tasks.utils import get_total_project_spend_time, annotate_total_time_per_task
+from tasks.utils import (
+    get_total_project_spend_time, annotate_total_time_per_task,
+    LoginRequired,
+)
 
-class ProjectDetailView(TemplateView):
+class ProjectDetailView(LoginRequired, TemplateView):
 
     template_name = 'tasks/project_detail.html'
 
@@ -44,7 +47,7 @@ class ProjectDetailView(TemplateView):
 
         return tasks
 
-class ProjectCreateView(CreateView):
+class ProjectCreateView(LoginRequired, CreateView):
 
     model = Project
     template_name = 'tasks/project_form.html'
@@ -59,7 +62,7 @@ class ProjectCreateView(CreateView):
     def get_success_url(self):
         return reverse('tasks-project-detail', args=[self.object.id])
 
-class ProjectDeleteView(DeleteView):
+class ProjectDeleteView(LoginRequired, DeleteView):
 
     model = Project
     template_name = 'tasks/project_delete_confirm.html'
@@ -77,7 +80,7 @@ class ProjectDeleteView(DeleteView):
     def get_success_url(self):
         return reverse('tasks-home')
 
-class TasksHomeView(TemplateView):
+class TasksHomeView(LoginRequired, TemplateView):
 
     template_name = 'tasks/tasks_home.html'
 
@@ -98,7 +101,7 @@ class TasksHomeView(TemplateView):
 
         return context
 
-class TaskCreateView(CreateView):
+class TaskCreateView(LoginRequired, CreateView):
 
     model = Task
     template_name = 'tasks/task_form.html'
@@ -131,7 +134,7 @@ class TaskCreateView(CreateView):
     def get_success_url(self):
         return reverse('tasks-project-detail', args=[self.project.id])
 
-class TaskDetailView(TemplateView):
+class TaskDetailView(LoginRequired, TemplateView):
 
     template_name = 'tasks/task_detail.html'
 
