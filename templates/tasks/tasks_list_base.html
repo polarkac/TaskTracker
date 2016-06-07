@@ -3,6 +3,7 @@
     <thead>
         <tr>
             <th>Name</th>
+            <th>Category</th>
             <th>State</th>
             <th>Create date</th>
             <th>Priority</th>
@@ -13,6 +14,7 @@
         {% for task in tasks %}
         <tr>
             <td><a href="{% url 'tasks-task-detail' task.id %}">{{ task.name }}</a></td>
+            <td>{{ task.category }}</td>
             <td>{{ task.state }}</td>
             <td>{{ task.created_date }}</td>
             <td>
