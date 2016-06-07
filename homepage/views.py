@@ -2,11 +2,19 @@ from django.views.generic import FormView, RedirectView
 from django.contrib.auth.forms import AuthenticationForm
 from django.core.urlresolvers import reverse
 from django.contrib.auth import login, logout
+from django.http import HttpResponseRedirect
 
 class LoginView(FormView):
 
     template_name = 'homepage/login.html'
     form_class = AuthenticationForm
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        if request.user.is_authenticated():
+            response = HttpResponseRedirect(self.get_success_url())
+
+        return response
 
     def form_valid(self, form):
         user = form.get_user()
