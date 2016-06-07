@@ -16,7 +16,7 @@ class Project(models.Model):
 
     class Meta:
         unique_together = (('name', 'user'),)
-        ordering = ['-created_date']
+        ordering = ['-default', '-created_date']
 
 class Priority(models.Model):
 
