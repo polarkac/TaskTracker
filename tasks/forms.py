@@ -42,16 +42,25 @@ class CommentTimeLogForm(forms.Form):
         queryset=TaskState.objects.all(), empty_label=None
     )
 
+    def clean(self):
+        cleaned_data = super().clean()
+        content = cleaned_data.get('content')
+        spend_time = cleaned_data.get('spend_time')
+
+        if content == '' and spend_time == 0:
+            error_msg = _('You have to specify either comment or/and spend time.')
+            self.add_error('content', error_msg)
+            self.add_error('spend_time', error_msg)
+
     def save(self, task):
         with transaction.atomic():
             comment = Comment.objects.create(
                 content=self.cleaned_data['content'],
                 task=task
             )
-            TimeLog.objects.create(
-                spend_time=self.cleaned_data['spend_time'],
-                comment=comment
-            )
+            spend_time = self.cleaned_data['spend_time']
+            if spend_time > 0:
+                TimeLog.objects.create(spend_time=spend_time, comment=comment)
             if task.state != self.cleaned_data['state']:
                 task.state = self.cleaned_data['state']
                 task.save()
