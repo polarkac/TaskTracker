@@ -9,12 +9,14 @@ class Project(models.Model):
     description = models.TextField(null=True, blank=True)
     user = models.ForeignKey(User)
     default = models.BooleanField(default=False)
+    created_date = models.DateTimeField(auto_now_add=True)
 
     def __str__(self):
         return self.name
 
     class Meta:
         unique_together = (('name', 'user'),)
+        ordering = ['-created_date']
 
 class Priority(models.Model):
 
@@ -50,6 +52,9 @@ class Task(models.Model):
     def __str__(self):
         return self.name
 
+    class Meta:
+        ordering = ['-created_date']
+
 class Comment(models.Model):
 
     content = models.TextField()
@@ -58,6 +63,9 @@ class Comment(models.Model):
 
     def __str__(self):
         return '%s: %s'.format(self.task, self.created_date)
+
+    class Meta:
+        ordering = ['created_date']
 
 class TimeLog(models.Model):
 

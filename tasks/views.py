@@ -3,6 +3,7 @@ from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.db.models import Sum
+from django.shortcuts import get_object_or_404
 
 from tasks.models import Project, Task, Comment, TimeLog, TaskState
 from tasks.forms import ProjectForm, CommentTimeLogForm
@@ -17,10 +18,7 @@ class ProjectDetailView(LoginRequired, TemplateView):
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
-        try:
-            project = self.get_project()
-        except Project.DoesNotExist:
-            raise Http404
+        project = self.get_project()
         tasks = self.get_tasks(project)
         total_project_spend_time = get_total_project_spend_time(tasks)
         annotate_total_time_per_task(tasks)
@@ -36,7 +34,7 @@ class ProjectDetailView(LoginRequired, TemplateView):
         user = self.request.user
         try:
             pk = int(self.kwargs.get('pk'))
-            project = Project.objects.get(id=pk, user=user)
+            project = get_object_or_404(Project, id=pk, user=user)
         except ValueError:
             project = None
 
@@ -70,10 +68,7 @@ class ProjectDeleteView(LoginRequired, DeleteView):
     def get_object(self):
         pk = self.kwargs.get('pk')
         user = self.request.user
-        try:
-            obj = Project.objects.get(id=pk, user=user, default=False)
-        except Project.DoesNotExist:
-            raise Http404
+        obj = get_object_or_404(Project, id=pk, user=user, default=False)
 
         return obj
 
@@ -123,17 +118,13 @@ class TaskCreateView(LoginRequired, CreateView):
 
     def get_project(self):
         user = self.request.user
-        try:
-            self.project = Project.objects.get(
-                pk=self.kwargs.get('project_pk'), user=user
-            )
-        except Project.DoesNotExist:
-            raise Http404
+        id = self.kwargs.get('project_pk')
+        project = get_object_or_404(Project, pk=id, user=user)
 
-        return self.project
+        return project
 
     def get_success_url(self):
-        return reverse('tasks-project-detail', args=[self.project.id])
+        return reverse('tasks-project-detail', args=[self.object.project.id])
 
 class TaskDetailView(LoginRequired, TemplateView):
 
@@ -179,10 +170,8 @@ class TaskDetailView(LoginRequired, TemplateView):
     def get_task(self):
         pk = self.kwargs.get('task_pk')
         user = self.request.user
-        try:
-            task = Task.objects.get(id=pk, project__user=user)
-        except Task.DoesNotExist:
-            raise Http404
+        task = get_object_or_404(Task, id=pk, project__user=user)
+
         return task
 
     def get_comments(self):
