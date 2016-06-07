@@ -46,11 +46,25 @@ class CommentTimeLogForm(forms.Form):
         cleaned_data = super().clean()
         content = cleaned_data.get('content')
         spend_time = cleaned_data.get('spend_time')
+        state = cleaned_data.get('state')
+
+        if content == '':
+            new_content = ''
+            if spend_time > 0:
+                new_content = 'Changed \'Spend time\' to {}.'.format(spend_time)
+            if self.initial.get('state') != state.id:
+                if new_content:
+                    new_content += '\n'
+                new_content += 'Changed \'State\' to {}.'.format(state.name)
+            content = new_content
+            cleaned_data['content'] = content
 
         if content == '' and spend_time == 0:
             error_msg = _('You have to specify either comment or/and spend time.')
             self.add_error('content', error_msg)
             self.add_error('spend_time', error_msg)
+
+        return cleaned_data
 
     def save(self, task):
         with transaction.atomic():

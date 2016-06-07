@@ -37,7 +37,7 @@
                 {% endif %}
             </div>
             <div class="panel-body">
-                {{ comment.content }}
+                {{ comment.content|linebreaks }}
             </div>
         </div>
         {% endfor %}
