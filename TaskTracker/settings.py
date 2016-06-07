@@ -117,7 +117,7 @@ TIME_ZONE = 'Europe/Prague'
 
 USE_I18N = True
 
-USE_L10N = True
+USE_L10N = False
 
 USE_TZ = True
 
@@ -130,3 +130,9 @@ STATIC_URL = '/static/'
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
+
+# Date and datetime default formatting
+
+DATE_FORMAT = 'd. m. Y'
+
+DATETIME_FORMAT = 'd. m. Y H:i'

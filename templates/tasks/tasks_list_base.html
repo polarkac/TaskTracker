@@ -1,19 +1,29 @@
 <p>Total time: {{ total_project_spend_time|default:0 }} minutes</p>
 <table class="table table-striped">
-    <tr><td>Name</td><td>Total time</td><td>Priority</td></tr>
-    {% for task in tasks %}
-    <tr>
-        <td><a href="{% url 'tasks-task-detail' task.id %}">{{ task.name }}</a></td>
-        <td>{{ task.total_spend_time }} minutes</td>
-        <td>
-            {% if task.priority.name == 'Low' %}
-            <span id="low-priority">⬇</span>
-            {% elif task.priority.name == 'Normal' %}
-            <span id="normal-priority">●</span>
-            {% elif task.priority.name == 'High' %}
-            <span id="high-priority">⬆</span>
-            {% endif %}
-        </td>
-    </tr>
-    {% endfor %}
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Create date</th>
+            <th>Priority</th>
+            <th>Total time</th>
+        </tr>
+    </thead>
+    <tbody>
+        {% for task in tasks %}
+        <tr>
+            <td><a href="{% url 'tasks-task-detail' task.id %}">{{ task.name }}</a></td>
+            <td>{{ task.created_date }}</td>
+            <td>
+                {% if task.priority.name == 'Low' %}
+                <span id="low-priority">⬇</span>
+                {% elif task.priority.name == 'Normal' %}
+                <span id="normal-priority">●</span>
+                {% elif task.priority.name == 'High' %}
+                <span id="high-priority">⬆</span>
+                {% endif %}
+            </td>
+            <td>{{ task.total_spend_time }} minutes</td>
+        </tr>
+        {% endfor %}
+    </tbody>
 </table>
