@@ -4,7 +4,7 @@ from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.db.models import Sum
 
-from tasks.models import Project, Task, Comment, TimeLog
+from tasks.models import Project, Task, Comment, TimeLog, TaskState
 from tasks.forms import ProjectForm, CommentTimeLogForm
 from tasks.utils import (
     get_total_project_spend_time, annotate_total_time_per_task,
@@ -116,6 +116,7 @@ class TaskCreateView(LoginRequired, CreateView):
     def form_valid(self, form):
         self.object = form.save(commit=False)
         self.object.project = self.get_project()
+        self.object.state = TaskState.objects.get(name='New')
         self.object.save()
 
         return super().form_valid(form)
@@ -182,7 +183,6 @@ class TaskDetailView(LoginRequired, TemplateView):
             task = Task.objects.get(id=pk, project__user=user)
         except Task.DoesNotExist:
             raise Http404
-
         return task
 
     def get_comments(self):
@@ -193,9 +193,12 @@ class TaskDetailView(LoginRequired, TemplateView):
         return comments
 
     def get_comment_time_log_form(self):
+        initial = {'state': self.task.state.id}
         if self.request.method == 'POST':
-            comment_time_log_form = CommentTimeLogForm(self.request.POST)
+            comment_time_log_form = CommentTimeLogForm(
+                self.request.POST, initial=initial
+            )
         else:
-            comment_time_log_form = CommentTimeLogForm()
+            comment_time_log_form = CommentTimeLogForm(initial=initial)
 
         return comment_time_log_form

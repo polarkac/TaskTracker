@@ -2,7 +2,7 @@ from django import forms
 from django.utils.translation import ugettext as _
 from django.db import transaction
 
-from tasks.models import Project, Comment, TimeLog
+from tasks.models import Project, Comment, TimeLog, TaskState
 
 class ProjectForm(forms.ModelForm):
 
@@ -38,6 +38,9 @@ class CommentTimeLogForm(forms.Form):
 
     content = forms.CharField(widget=forms.Textarea(), required=False)
     spend_time = forms.IntegerField(initial=0, min_value=0, max_value=24 * 60)
+    state = forms.ModelChoiceField(
+        queryset=TaskState.objects.all(), empty_label=None
+    )
 
     def save(self, task):
         with transaction.atomic():
@@ -49,3 +52,6 @@ class CommentTimeLogForm(forms.Form):
                 spend_time=self.cleaned_data['spend_time'],
                 comment=comment
             )
+            if task.state != self.cleaned_data['state']:
+                task.state = self.cleaned_data['state']
+                task.save()
