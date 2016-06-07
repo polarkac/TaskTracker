@@ -30,6 +30,13 @@ class Category(models.Model):
     def __str__(self):
         return self.name
 
+class TaskState(models.Model):
+
+    name = models.CharField(max_length=150)
+
+    def __str__(self):
+        return self.name
+
 class Task(models.Model):
 
     name = models.CharField(max_length=200)
@@ -38,6 +45,7 @@ class Task(models.Model):
     priority = models.ForeignKey(Priority)
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
+    state = models.ForeignKey(TaskState)
 
     def __str__(self):
         return self.name
