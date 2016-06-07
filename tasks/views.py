@@ -1,9 +1,9 @@
 from django.views.generic import TemplateView, CreateView, DeleteView
 from django.core.urlresolvers import reverse
-from django.http import Http404
 from django.http.response import HttpResponseRedirect
 from django.db.models import Sum
 from django.shortcuts import get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
 from tasks.models import Project, Task, Comment, TimeLog, TaskState
 from tasks.forms import ProjectForm, CommentTimeLogForm
@@ -41,7 +41,15 @@ class ProjectDetailView(LoginRequired, TemplateView):
         return project
 
     def get_tasks(self, project):
-        tasks = Task.objects.filter(project=project).select_related()
+        page = self.request.GET.get('page')
+        task_list = Task.objects.filter(project=project).select_related()
+        paginator = Paginator(task_list, 15)
+        try:
+            tasks = paginator.page(page)
+        except PageNotAnInteger:
+            tasks = paginator.page(1)
+        except EmptyPage:
+            tasks = paginator.page(paginator.num_pages)
 
         return tasks
 
@@ -83,10 +91,7 @@ class TasksHomeView(LoginRequired, TemplateView):
         context = super().get_context_data(*args, **kwargs)
         user = self.request.user
         general_project = Project.objects.get(name='General', user=user)
-        tasks = (
-            Task.objects.filter(project__user=user)
-            .order_by('-created_date').select_related()[:10]
-        )
+        tasks = Task.objects.filter(project__user=user).select_related()[:15]
         total_project_spend_time = get_total_project_spend_time(tasks)
         annotate_total_time_per_task(tasks)
         context.update({
