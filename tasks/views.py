@@ -23,7 +23,7 @@ class ProjectDetailView(LoginRequired, TemplateView):
         total_project_spend_time = get_total_project_spend_time(tasks)
 
         page = self.request.GET.get('page')
-        paginator = Paginator(tasks, 5)
+        paginator = Paginator(tasks, 15)
         try:
             tasks = paginator.page(page)
         except PageNotAnInteger:
@@ -95,9 +95,10 @@ class TasksHomeView(LoginRequired, TemplateView):
         not_closed_states = TaskState.objects.exclude(name='Closed')
         tasks = (
             Task.objects.filter(project__user=user, state=not_closed_states)
-            .select_related()[:15]
+            .select_related()
         )
         total_project_spend_time = get_total_project_spend_time(tasks)
+        tasks = tasks[:15]
         annotate_total_time_per_task(tasks)
         context.update({
             'project': general_project, 'tasks': tasks,
