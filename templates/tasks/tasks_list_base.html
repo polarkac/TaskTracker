@@ -8,6 +8,7 @@
             <th>Create date</th>
             <th>Priority</th>
             <th>Total time</th>
+            <th>Paid</th>
         </tr>
     </thead>
     <tbody>
@@ -27,6 +28,15 @@
                 {% endif %}
             </td>
             <td>{{ task.total_spend_time }} minutes</td>
+            <td>
+                <a href="{% url 'tasks-task-change_paid' task.id %}?next={{ request.get_full_path }}">
+                    {% if task.paid %}
+                    <span style="color: green">Yes</span>
+                    {% else %}
+                    <span style="color: red">No</span>
+                    {% endif %}
+                </a>
+            </td>
         </tr>
         {% endfor %}
     </tbody>

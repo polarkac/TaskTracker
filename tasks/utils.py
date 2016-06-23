@@ -4,8 +4,9 @@ from django.contrib.auth.mixins import LoginRequiredMixin
 from tasks.models import TimeLog
 
 def get_total_project_spend_time(tasks):
+    unpaid_tasks = tasks.filter(paid=False)
     total_time = (
-        TimeLog.objects.filter(comment__task__in=tasks)
+        TimeLog.objects.filter(comment__task__in=unpaid_tasks)
         .aggregate(Sum('spend_time'))
     )['spend_time__sum']
 

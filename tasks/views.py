@@ -1,4 +1,4 @@
-from django.views.generic import TemplateView, CreateView, DeleteView
+from django.views.generic import TemplateView, CreateView, DeleteView, RedirectView
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.db.models import Sum
@@ -201,3 +201,22 @@ class TaskDetailView(LoginRequired, TemplateView):
             comment_time_log_form = CommentTimeLogForm(initial=initial)
 
         return comment_time_log_form
+
+class TaskChangePaidView(RedirectView):
+
+    def get_redirect_url(self, *args, **kwargs):
+        url = self.request.GET.get('next')
+
+        return url
+
+    def get(self, request, *args, **kwargs):
+        response = super().get(request, *args, **kwargs)
+        self._change_paid()
+
+        return response
+
+    def _change_paid(self):
+        task_pk = self.kwargs.get('task_pk')
+        task = Task.objects.get(id=task_pk)
+        task.paid = False if task.paid else True
+        task.save()
