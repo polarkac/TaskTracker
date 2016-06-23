@@ -21,6 +21,15 @@ class ProjectDetailView(LoginRequired, TemplateView):
         project = self.get_project()
         tasks = self.get_tasks(project)
         total_project_spend_time = get_total_project_spend_time(tasks)
+
+        page = self.request.GET.get('page')
+        paginator = Paginator(tasks, 5)
+        try:
+            tasks = paginator.page(page)
+        except PageNotAnInteger:
+            tasks = paginator.page(1)
+        except EmptyPage:
+            tasks = paginator.page(paginator.num_pages)
         annotate_total_time_per_task(tasks)
 
         context.update({
@@ -41,15 +50,7 @@ class ProjectDetailView(LoginRequired, TemplateView):
         return project
 
     def get_tasks(self, project):
-        page = self.request.GET.get('page')
-        task_list = Task.objects.filter(project=project).select_related()
-        paginator = Paginator(task_list, 15)
-        try:
-            tasks = paginator.page(page)
-        except PageNotAnInteger:
-            tasks = paginator.page(1)
-        except EmptyPage:
-            tasks = paginator.page(paginator.num_pages)
+        tasks = Task.objects.filter(project=project).select_related()
 
         return tasks
 
