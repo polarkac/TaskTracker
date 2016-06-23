@@ -48,6 +48,7 @@ class Task(models.Model):
     category = models.ForeignKey(Category)
     created_date = models.DateTimeField(auto_now_add=True)
     state = models.ForeignKey(TaskState)
+    paid = models.BooleanField(default=False)
 
     def __str__(self):
         return self.name
