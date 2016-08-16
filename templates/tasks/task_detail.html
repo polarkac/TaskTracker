@@ -11,6 +11,13 @@
     </div>
     <div class="col-sm-4">
         <table class="table">
+            <tr><td>Project</td>
+                <td>
+                    <a href="{% url 'tasks-project-detail' task.project.id %}">
+                        {{ task.project.name }}
+                    </a>
+                </td>
+            </tr>
             <tr><td>Category</td><td>{{ task.category.name }}</td></tr>
             <tr><td>Priority</td><td>{{ task.priority.name }}</td></tr>
             <tr><td>State</td><td>{{ task.state }}</td></tr>
