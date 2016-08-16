@@ -14,7 +14,7 @@
                 <td{% if project.default %} colspan="2"{% endif %}>
                     <a href="{% url 'tasks-project-detail' project.id %}">
                         {{ project.name|capfirst }}
-                        <span class="badge">{{ project.unpaid_tasks }}</span>
+                        <span class="badge">{{ project.unpaid_tasks|length }}</span>
                     </a>
                 </td>
                 {% if not project.default %}
