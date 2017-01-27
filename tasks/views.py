@@ -211,7 +211,7 @@ class TaskDetailView(LoginRequired, TemplateView):
 
         return comment_time_log_form
 
-class TaskChangePaidView(RedirectView):
+class TaskChangePaidView(LoginRequired, RedirectView):
 
     def get_redirect_url(self, *args, **kwargs):
         url = self.request.GET.get('next')
