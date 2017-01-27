@@ -5,7 +5,9 @@ from django.db.models import Sum
 from django.shortcuts import get_object_or_404
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 
-from tasks.models import Project, Task, Comment, TimeLog, TaskState
+from tasks.models import (
+    Project, Task, Comment, TimeLog, TaskState, Category, Priority
+)
 from tasks.forms import ProjectForm, CommentTimeLogForm
 from tasks.utils import (
     get_total_project_spend_time, annotate_total_time_per_task,
@@ -118,6 +120,12 @@ class TaskCreateView(LoginRequired, CreateView):
         context.update({'project': self.get_project()})
 
         return context
+
+    def get_initial(self):
+        task_category = Category.objects.get(name='Task')
+        normal_priority = Priority.objects.get(name='Normal')
+
+        return {'category': task_category, 'priority': normal_priority}
 
     def form_valid(self, form):
         self.object = form.save(commit=False)
