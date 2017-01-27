@@ -30,3 +30,7 @@
     color: #ce1800;
     font-size: 1.5em;
 }
+
+.delete-badge {
+    background-color: red;
+}

@@ -11,17 +11,19 @@
             {% projects_list user as projects %}
             {% for project in projects %}
             <tr>
-                <td{% if project.default %} colspan="2"{% endif %}>
+                <td>
                     <a href="{% url 'tasks-project-detail' project.id %}">
                         {{ project.name|capfirst }}
-                        <span class="badge">{{ project.unpaid_tasks|length }}</span>
                     </a>
                 </td>
-                {% if not project.default %}
                 <td>
-                    <a href="{% url 'tasks-project-delete' project.id %}">&#128473;</a>
+                    <span class="badge">{{ project.unpaid_tasks|length }}</span>
+                    {% if not project.default %}
+                    <a href="{% url 'tasks-project-delete' project.id %}">
+                        <span class="badge delete-badge">&#x2718;</span>
+                    </a>
+                    {% endif %}
                 </td>
-                {% endif %}
             </tr>
             {% empty %}
             <tr><td colspan="2">No projects.</td></tr>
