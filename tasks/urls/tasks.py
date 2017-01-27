@@ -2,6 +2,7 @@ from django.conf.urls import url
 
 from tasks.views import (
     TaskCreateView, TasksHomeView, TaskDetailView, TaskChangePaidView,
+    TaskUpdateView,
 )
 
 urlpatterns = [
@@ -9,6 +10,10 @@ urlpatterns = [
     url(
         r'^create/(?P<project_pk>[0-9]+)/$', TaskCreateView.as_view(),
         name='tasks-task-create'
+    ),
+    url(
+        r'^update/(?P<task_pk>[0-9]+)/$', TaskUpdateView.as_view(),
+        name='tasks-task-update'
     ),
     url(
         r'^detail/(?P<task_pk>[0-9]+)/$', TaskDetailView.as_view(),

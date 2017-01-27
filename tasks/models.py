@@ -2,6 +2,7 @@ from django.db import models
 from django.contrib.auth.models import User
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.db.models import Sum
 
 class Project(models.Model):
 
@@ -49,6 +50,30 @@ class Task(models.Model):
     created_date = models.DateTimeField(auto_now_add=True)
     state = models.ForeignKey(TaskState)
     paid = models.BooleanField(default=False)
+    per_hour = models.PositiveSmallIntegerField(default=150)
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+
+        self.total_task_time = 0
+
+    def get_payment(self):
+        total_task_time = self.get_task_time()
+
+        return (total_task_time / 60) * self.per_hour
+
+    def get_task_time(self):
+        if not self.total_task_time:
+            time_logs = (
+                TimeLog.objects.filter(comment__task=self)
+                .aggregate(Sum('spend_time'))
+            )
+
+            self.total_task_time = time_logs['spend_time__sum']
+            if not self.total_task_time:
+                self.total_task_time = 0
+
+        return self.total_task_time
 
     def __str__(self):
         return self.name

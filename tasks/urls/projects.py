@@ -1,7 +1,7 @@
 from django.conf.urls import url
 
 from tasks.views import (
-    ProjectDetailView, ProjectCreateView, ProjectDeleteView,
+    ProjectDetailView, ProjectCreateView, ProjectDeleteView, ProjectUpdateView,
 )
 
 urlpatterns = [
@@ -13,5 +13,9 @@ urlpatterns = [
     url(
         r'^delete/(?P<pk>[0-9]+)/$', ProjectDeleteView.as_view(),
         name='tasks-project-delete'
+    ),
+    url(
+        r'^update/(?P<pk>[0-9]+)/$', ProjectUpdateView.as_view(),
+        name='tasks-project-update'
     ),
 ]

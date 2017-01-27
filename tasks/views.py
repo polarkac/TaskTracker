@@ -1,4 +1,6 @@
-from django.views.generic import TemplateView, CreateView, DeleteView, RedirectView
+from django.views.generic import (
+    TemplateView, CreateView, DeleteView, RedirectView, UpdateView
+)
 from django.core.urlresolvers import reverse
 from django.http.response import HttpResponseRedirect
 from django.db.models import Sum
@@ -23,6 +25,10 @@ class ProjectDetailView(LoginRequired, TemplateView):
         project = self.get_project()
         tasks = self.get_tasks(project)
         total_project_spend_time = get_total_project_spend_time(tasks)
+        unpaid_tasks = Task.objects.filter(project=project, paid=False)
+        total_project_payment = 0
+        for task in unpaid_tasks:
+            total_project_payment += task.get_payment()
 
         page = self.request.GET.get('page')
         paginator = Paginator(tasks, 15)
@@ -37,6 +43,7 @@ class ProjectDetailView(LoginRequired, TemplateView):
         context.update({
             'project': project, 'tasks': tasks,
             'total_project_spend_time': total_project_spend_time,
+            'total_project_payment': total_project_payment,
         })
 
         return context
@@ -113,7 +120,7 @@ class TaskCreateView(LoginRequired, CreateView):
 
     model = Task
     template_name = 'tasks/task_form.html'
-    fields = ['name', 'description', 'priority', 'category']
+    fields = ['name', 'description', 'per_hour', 'priority', 'category']
 
     def get_context_data(self, *args, **kwargs):
         context = super().get_context_data(*args, **kwargs)
@@ -229,3 +236,22 @@ class TaskChangePaidView(LoginRequired, RedirectView):
         task = Task.objects.get(id=task_pk)
         task.paid = False if task.paid else True
         task.save()
+
+class TaskUpdateView(LoginRequired, UpdateView):
+
+    model = Task
+    fields = ['name', 'description', 'priority', 'category', 'per_hour']
+    template_name = 'tasks/task_form.html'
+    pk_url_kwarg = 'task_pk'
+
+    def get_success_url(self):
+        return reverse('tasks-task-detail', args=[self.object.id])
+
+class ProjectUpdateView(LoginRequired, UpdateView):
+
+    model = Project
+    fields = ['name', 'description']
+    template_name = 'tasks/project_form.html'
+
+    def get_success_url(self):
+        return reverse('tasks-project-detail', args=[self.object.id])

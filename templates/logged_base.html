@@ -19,6 +19,9 @@
                 <td>
                     <span class="badge">{{ project.unpaid_tasks|length }}</span>
                     {% if not project.default %}
+                    <a href="{% url 'tasks-project-update' project.id %}">
+                        <span class="badge">Edit</span>
+                    </a>
                     <a href="{% url 'tasks-project-delete' project.id %}">
                         <span class="badge delete-badge">&#x2718;</span>
                     </a>

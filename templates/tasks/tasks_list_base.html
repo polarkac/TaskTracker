@@ -1,10 +1,12 @@
 <p>Total time: {{ total_project_spend_time|default:0 }} minutes</p>
+<p>Total payment: {{ total_project_payment|default:0 }} Kč</p>
 <table class="table table-striped">
     <thead>
         <tr>
             <th>Name</th>
             <th>Project</th>
             <th>Category</th>
+            <th>Payment</th>
             <th>State</th>
             <th>Create date</th>
             <th>Priority</th>
@@ -22,6 +24,7 @@
                 </a>
             </td>
             <td>{{ task.category }}</td>
+            <td>{{ task.get_payment }} Kč</td>
             <td>{{ task.state }}</td>
             <td>{{ task.created_date }}</td>
             <td>
